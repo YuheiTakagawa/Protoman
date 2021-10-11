@@ -91,6 +91,14 @@ const CollectionCell: React.FunctionComponent<Props> = ({ collectionName }) => {
     hideMenu();
   }
 
+  function handleDuplicate(): void {
+    const tmpName = 'Request Copy';
+    let tmpNameIdx = 1;
+    while (!validateFlowName(`${tmpName}${tmpNameIdx}`)) tmpNameIdx++;
+    dispatch(createFlow(collectionName, `${tmpName}${tmpNameIdx}`));
+    hideMenu();
+  }
+
   function checkName(newName: string): boolean {
     return validateCollectionName(newName, collectionName, collectionNames);
   }

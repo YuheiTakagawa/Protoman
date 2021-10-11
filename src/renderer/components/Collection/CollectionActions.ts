@@ -73,6 +73,14 @@ type ReorderFlow = {
 
 const REORDER_FLOW = 'REORDER_FLOW';
 
+type DuplicateFlow = {
+  type: 'DUPLICATE_FLOW';
+  collectionName: string;
+  flowName: string;
+}
+
+const DUPLICATE_FLOW = 'DUPLICATE_FLOW';
+
 export const CollectionActionTypes = [
   CREATE_COLLECTION,
   CHANGE_COLLECTION_NAME,
@@ -84,6 +92,7 @@ export const CollectionActionTypes = [
   OPEN_FM,
   CLOSE_FM,
   REORDER_FLOW,
+  DUPLICATE_FLOW,
 ];
 
 export type CollectionAction =
@@ -96,7 +105,8 @@ export type CollectionAction =
   | DeleteFlow
   | OpenFM
   | CloseFM
-  | ReorderFlow;
+  | ReorderFlow
+  | DuplicateFlow;
 
 export function createCollection(collectionName: string): CreateCollection {
   return {
@@ -170,5 +180,13 @@ export function reorderFlow(collectionName: string, src: number, dst: number): R
     collectionName,
     src,
     dst,
+  };
+}
+
+export function duplicateFlow(collectionName: string, flowName: string): DuplicateFlow {
+  return {
+    type: DUPLICATE_FLOW,
+    collectionName,
+    flowName
   };
 }

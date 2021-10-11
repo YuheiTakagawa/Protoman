@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { prevent, getByKey } from '../../utils/utils';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../models/AppState';
-import { selectFlow, deleteFlow, reorderFlow } from './CollectionActions';
+import { selectFlow, deleteFlow, reorderFlow, duplicateFlow } from './CollectionActions';
 import { DragDropContext, DropResult, Draggable, Droppable } from 'react-beautiful-dnd';
 
 const ClickableItem = styled(List.Item)`
@@ -53,6 +53,10 @@ const FlowList: React.FunctionComponent<Props> = ({ collectionName }) => {
     dispatch(reorderFlow(collectionName, src, dst));
   }
 
+  function handleDuplicate(flowName: string): void {
+    dispatch(duplicateFlow(collectionName, flowName));
+  }
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId={collectionName}>
@@ -68,6 +72,7 @@ const FlowList: React.FunctionComponent<Props> = ({ collectionName }) => {
                   emphasize={isCurrentCollection && currentFlow === flowName}
                   handleSelection={handleSelection}
                   handleDelete={handleDelete}
+                  handleDuplicate={handleDuplicate}
                 />
               )}
             />
@@ -85,9 +90,10 @@ type CellProps = {
   idx: number;
   handleSelection: (name: string) => void;
   handleDelete: (name: string) => void;
+  handleDuplicate: (name: string) => void;
 };
 
-const FlowCell: React.FC<CellProps> = ({ flowName, emphasize, handleSelection, handleDelete, idx }) => {
+const FlowCell: React.FC<CellProps> = ({ flowName, emphasize, handleSelection, handleDelete, handleDuplicate, idx }) => {
   const [menuVisible, setMenuVisible] = React.useState(false);
   function showMenu(): void {
     setMenuVisible(true);
@@ -102,12 +108,25 @@ const FlowCell: React.FC<CellProps> = ({ flowName, emphasize, handleSelection, h
     hideMenu();
   }
 
+  function dulplicateFlow(): void {
+    handleDuplicate(flowName);
+    hideMenu();
+  }
+
   const menu = (
     <div>
+      <div>
       <Button type="link" danger onClick={prevent(deleteFlow)}>
         <DeleteOutlined />
         Delete Request
       </Button>
+    </div>
+      <div>
+        <Button type="link" danger onClick={prevent(dulplicateFlow)}>
+          <DeleteOutlined />
+          Duplicate
+        </Button>
+      </div>
     </div>
   );
 
